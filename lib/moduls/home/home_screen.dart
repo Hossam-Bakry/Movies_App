@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    movieResponce = ApiRepository.fetchPopularMovies();
+    // movieResponce = ApiRepository.fetchPopularMovies();
     topMovieResponce = ApiRepository.fetchTopRatedMovies();
   }
 
@@ -36,29 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               future: topMovieResponce,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return
-                      //   CarouselSlider(
-                      //   carouselController: carouselController,
-                      //   items: snapshot.data!.results!
-                      //       .map(
-                      //         (e) =>
-                      //             PopularWidget(snapshot.data)
-                      //   )
-                      //       .toList(),
-                      //   options: CarouselOptions(
-                      //     height: 200.0,
-                      //     initialPage: 0,
-                      //     viewportFraction: 1.0,
-                      //     enableInfiniteScroll: true,
-                      //     autoPlay: true,
-                      //     reverse: false,
-                      //     autoPlayInterval: Duration(seconds: 3),
-                      //     autoPlayAnimationDuration: Duration(seconds: 1),
-                      //     autoPlayCurve: Curves.fastOutSlowIn,
-                      //     scrollDirection: Axis.horizontal,
-                      //   ),
-                      // );
-                      PopularWidget(snapshot.data);
+                  return PopularWidget(snapshot.data);
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
