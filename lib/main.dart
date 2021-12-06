@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/view/home_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:movies_app/layout/home_layout.dart';
+import 'package:movies_app/services/style/theme.dart';
 
 void main() {
   runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.light,
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
+      theme: MyThemeData.defaultTheme,
       routes: {
-        HomeScreen.routeName: (BuildContext context) => HomeScreen(),
+        HomeLayout.routeName: (BuildContext context) => HomeLayout(),
       },
+      initialRoute: HomeLayout.routeName,
     );
   }
 }
