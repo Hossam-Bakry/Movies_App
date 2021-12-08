@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/model/top_movies.dart';
+import 'package:movies_app/model/movies.dart';
 
 class PopularItem extends StatelessWidget {
-  TopMovies? topMovies;
+  Results movieRsponse;
 
-  PopularItem(this.topMovies);
+  PopularItem(this.movieRsponse);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,7 @@ class PopularItem extends StatelessWidget {
       child: Stack(
         children: [
           Image.network(
-            'https://image.tmdb.org/t/p/w500' +
-                '${topMovies!.results!.elementAt(5).posterPath}',
+            'https://image.tmdb.org/t/p/w500' + '${movieRsponse.posterPath}',
             fit: BoxFit.cover,
             width: 130,
             height: 200,

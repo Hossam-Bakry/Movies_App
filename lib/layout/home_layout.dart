@@ -24,7 +24,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[currentIndex],
-      bottomSheet: Theme(
+      bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: Color.fromRGBO(26, 26, 26, 1.0),
         ),

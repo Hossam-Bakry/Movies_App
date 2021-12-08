@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/model/top_movies.dart';
+import 'package:movies_app/model/movies.dart';
 import 'package:movies_app/moduls/home/popular_movie_widget/popular_item.dart';
 
 class PopularWidget extends StatelessWidget {
-  TopMovies? topMovies;
+  Results movieRsponse;
 
-  PopularWidget(this.topMovies);
+  PopularWidget(this.movieRsponse);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class PopularWidget extends StatelessWidget {
             height: size.height * 0.22,
             child: Image.network(
               'https://image.tmdb.org/t/p/w500' +
-                  '${topMovies!.results!.elementAt(5).backdropPath}',
+                  '${movieRsponse.backdropPath}',
               fit: BoxFit.cover,
             ),
           ),
@@ -30,7 +30,7 @@ class PopularWidget extends StatelessWidget {
             top: size.height * 0.065,
             child: Row(
               children: [
-                PopularItem(topMovies),
+                PopularItem(movieRsponse),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class PopularWidget extends StatelessWidget {
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      topMovies!.results!.elementAt(5).title ?? '',
+                      movieRsponse.title ?? '',
                       overflow: TextOverflow.visible,
                       maxLines: 2,
                       style: TextStyle(
@@ -48,7 +48,7 @@ class PopularWidget extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      topMovies!.results!.elementAt(5).releaseDate ?? '',
+                      movieRsponse.releaseDate ?? '',
                       style: TextStyle(
                         fontSize: 13,
                         color: Color.fromRGBO(181, 180, 180, 1.0),

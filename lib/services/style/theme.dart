@@ -11,11 +11,11 @@ class MyThemeData {
       selectedItemColor: Color.fromRGBO(255, 187, 59, 1.0),
       selectedIconTheme: IconThemeData(
         color: Color.fromRGBO(255, 187, 59, 1.0),
-        size: 40,
+        size: 35,
       ),
       unselectedIconTheme: IconThemeData(
         color: Colors.white,
-        size: 30,
+        size: 25,
       ),
     ),
   );
