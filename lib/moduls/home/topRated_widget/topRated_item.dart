@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/model/top_movies.dart';
+import 'package:movies_app/model/movies.dart';
 
 class TopRatedItem extends StatelessWidget {
-  TopMovies? topMovies;
+  Movies? topMovies;
   int index;
 
   TopRatedItem(this.topMovies, this.index);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/model/top_movies.dart';
+import 'package:movies_app/model/movies.dart';
 import 'package:movies_app/moduls/home/newRelase_movie_widget/newRelase_item.dart';
 
 class NewRelaseWidget extends StatelessWidget {
-  TopMovies? topMovies;
+  Movies? topMovies;
 
   NewRelaseWidget(this.topMovies);
 
