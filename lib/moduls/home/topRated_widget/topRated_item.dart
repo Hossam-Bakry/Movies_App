@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
+import 'package:movies_app/moduls/home/item_photo_widget.dart';
 
 class TopRatedItem extends StatelessWidget {
   Movies? topMovies;
@@ -22,24 +23,7 @@ class TopRatedItem extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  'https://image.tmdb.org/t/p/w500' +
-                      '${topMovies!.results!.elementAt(index).posterPath}',
-                  fit: BoxFit.cover,
-                  width: 110,
-                  height: 130,
-                ),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Image.asset('assets/images/ic_bookmark.png'),
-              ),
-            ],
-          ),
+          ItemPhotoWidget(topMovies!.results!.elementAt(index)),
           Container(
             margin: EdgeInsets.all(6),
             child: Column(
