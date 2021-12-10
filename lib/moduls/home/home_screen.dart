@@ -7,8 +7,6 @@ import 'package:movies_app/moduls/home/topRated_widget/topRated_widget.dart';
 import 'package:movies_app/services/repository/api_repository.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -47,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 }
-                return PopularWidget(snapshot.data!.results!.elementAt(2));
+                return PopularWidget(snapshot.data);
               },
             ),
             FutureBuilder<Movies>(
