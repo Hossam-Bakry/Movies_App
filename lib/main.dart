@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movies_app/layout/home_layout.dart';
+import 'package:movies_app/moduls/home/DetailsScreen/DetailsScreen.dart';
 import 'package:movies_app/services/style/theme.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: MyThemeData.defaultTheme,
       routes: {
         HomeLayout.routeName: (BuildContext context) => HomeLayout(),
+        DetailsScreen.routeName: (BuildContext context) => DetailsScreen(),
       },
       initialRoute: HomeLayout.routeName,
     );

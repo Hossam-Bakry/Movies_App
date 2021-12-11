@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
+import 'package:movies_app/moduls/home/DetailsScreen/DetailsScreen.dart';
 
 class PopularItem extends StatelessWidget {
-  Results movieRsponse;
+  Movies? topMovies;
 
-  PopularItem(this.movieRsponse);
+  PopularItem(this.topMovies);
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +14,29 @@ class PopularItem extends StatelessWidget {
       height: 300,
       child: Stack(
         children: [
-          Image.network(
-            'https://image.tmdb.org/t/p/w500' + '${movieRsponse.posterPath}',
-            fit: BoxFit.cover,
-            width: 130,
-            height: 200,
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                  context, DetailsScreen.routeName, arguments: topMovies);
+            },
+            child: Image.network(
+              'https://image.tmdb.org/t/p/w500' +
+                  '${topMovies!.results!.elementAt(5).posterPath}',
+              fit: BoxFit.cover,
+              width: 130,
+              height: 200,
+            ),
           ),
-          Image.asset('assets/images/ic_bookmark.png'),
+          InkWell(
+              onTap: () {
+                resdata.add(topMovies);
+              },
+
+              child: Image.asset('assets/images/ic_bookmark.png')),
         ],
       ),
     );
   }
 }
+
+List<Movies?>resdata = [];
