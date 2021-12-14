@@ -7,8 +7,6 @@ import 'package:movies_app/moduls/home/topRated_widget/topRated_widget.dart';
 import 'package:movies_app/services/repository/api_repository.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -19,18 +17,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // movieResponce = ApiRepository.fetchPopularMovies();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             FutureBuilder<Movies>(
-              future: ApiRepository.fetchMoviesData(),
+              future: ApiRepository.fetchPopular(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(
@@ -47,11 +45,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 }
-                return PopularWidget(snapshot.data!.results!.elementAt(2));
+                return CarouselSlider(
+                  items: snapshot.data!.results!.map((element) {
+                    return PopularWidget(element);
+                  }).toList(),
+                  options: CarouselOptions(
+                    height: size.height * 0.30,
+                    initialPage: 0,
+                    viewportFraction: 1.0,
+                    enableInfiniteScroll: true,
+                    autoPlay: true,
+                    reverse: false,
+                    autoPlayInterval: Duration(seconds: 8),
+                    autoPlayAnimationDuration: Duration(milliseconds: 400),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                );
               },
             ),
             FutureBuilder<Movies>(
-              future: ApiRepository.fetchMoviesData(),
+              future: ApiRepository.fetchPopular(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return NewRelaseWidget(snapshot.data);
@@ -64,8 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 return Center(
                     child: const CircularProgressIndicator(
-                  color: Color.fromRGBO(255, 187, 59, 1.0),
-                ));
+                      color: Color.fromRGBO(255, 187, 59, 1.0),
+                    ));
               },
             ),
             FutureBuilder<Movies>(
@@ -76,14 +90,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text(
-                    '${snapshot.error}',
-                    style: TextStyle(color: Colors.white),
-                  ));
+                        '${snapshot.error}',
+                        style: TextStyle(color: Colors.white),
+                      ));
                 }
                 return Center(
                     child: const CircularProgressIndicator(
-                      color: Color.fromRGBO(255, 187, 59, 1.0),
-                    ));
+                  color: Color.fromRGBO(255, 187, 59, 1.0),
+                ));
               },
             ),
           ],

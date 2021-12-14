@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
 import 'package:movies_app/moduls/home/item_photo_widget.dart';
 
-class TopRatedItem extends StatelessWidget {
+class MoreMovieItem extends StatelessWidget {
   Movies? topMovies;
   int index;
 
-  TopRatedItem(this.topMovies, this.index);
+  MoreMovieItem(this.topMovies, this.index);
 
   @override
   Widget build(BuildContext context) {

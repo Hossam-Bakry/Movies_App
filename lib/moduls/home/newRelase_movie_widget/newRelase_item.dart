@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
+import 'package:movies_app/moduls/home/item_photo_widget.dart';
 
 class NewRelaseItem extends StatelessWidget {
   Movies? topMovies;
@@ -16,24 +17,7 @@ class NewRelaseItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              'https://image.tmdb.org/t/p/w500' +
-                  '${topMovies!.results!.elementAt(index).posterPath}',
-              fit: BoxFit.cover,
-              width: 130,
-              height: 200,
-            ),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: Image.asset('assets/images/ic_bookmark.png'),
-          ),
-        ],
-      ),
+      child: ItemPhotoWidget(topMovies, index),
     );
   }
 }
