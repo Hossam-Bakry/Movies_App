@@ -1,43 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
+import 'package:movies_app/moduls/home/DetailsScreen/DetailsScreen.dart';
+import 'package:movies_app/services/provider/app_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchItem extends StatelessWidget {
-  Results? movie;
+  Results? movieResponse;
+  int index;
 
-  SearchItem(this.movie);
+  SearchItem(this.movieResponse, this.index);
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AppProvider>(context);
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30),
+      margin: EdgeInsets.symmetric(horizontal: 8),
       width: double.infinity,
-      height: 90,
+      height: 100,
       child: Row(
         children: [
-          Image.network(
-            'https://image.tmdb.org/t/p/w500' + '${movie!.posterPath}',
-            fit: BoxFit.cover,
+          Flexible(
+            child: Stack(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            DetailsScreen(movieResponse),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.network(
+                      'https://image.tmdb.org/t/p/w500' +
+                          '${movieResponse!.posterPath}',
+                      fit: BoxFit.cover,
+                      width: 150,
+                      height: 100,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    provider.selectMovie(movieResponse!);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: provider.idList.contains(movieResponse!.id)
+                        ? Image.asset('assets/images/ic_check.png')
+                        : Image.asset('assets/images/ic_bookmark.png'),
+                  ),
+                ),
+              ],
+            ),
           ),
-          Expanded(
+          SizedBox(width: 10),
+          Flexible(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  movie!.title ?? '',
+                  movieResponse!.title ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 15, color: Colors.white),
                 ),
+                SizedBox(height: 5),
                 Text(
-                  movie!.releaseDate ?? '',
+                  movieResponse!.releaseDate ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 13,
                     color: Color.fromRGBO(181, 180, 180, 1.0),
                   ),
                 ),
+                SizedBox(height: 5),
                 Text(
-                  movie!.overview ?? '',
+                  movieResponse!.overview ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

@@ -11,15 +11,9 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  late Future<Movies> topMovieResponce;
+  TextEditingController textController = TextEditingController();
   List<Results> result = [];
   String searchKey = '';
-
-  @override
-  void initState() {
-    super.initState();
-    topMovieResponce = ApiRepository.fetchSearchMovies(searchKey);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +21,14 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 35),
+            margin: EdgeInsets.symmetric(horizontal: 35, vertical: 12),
             height: 48,
             child: TextFormField(
+              // controller: textController,
+
               onChanged: (String? value) {
-                setState(() {
-                  searchKey = value ?? '';
-                });
+                searchKey = value ?? '';
+                setState(() {});
               },
               style: TextStyle(
                 color: Colors.white,
@@ -68,81 +63,52 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
-          // Expanded(
-          //   child: ListView.separated(
-          //     itemBuilder: (BuildContext context, index) {
-          //       return SearchItem(
-          //         loadSearchData().elementAt(index),
-          //       );
-          //     },
-          //     separatorBuilder: (BuildContext context, index) {
-          //       return Container(
-          //         width: double.infinity,
-          //         height: 1,
-          //         color: Color.fromRGBO(181, 180, 180, 1.0),
-          //       );
-          //     },
-          //     itemCount: loadSearchData().length,
-          //   ),
-          // ),
-          FutureBuilder<Movies>(
-            future: ApiRepository.fetchSearchMovies(searchKey),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.separated(
-                  itemBuilder: (BuildContext context, index) {
-                    return SearchItem(snapshot.data!.results!.elementAt(index));
-                    // SearchItem(snapshot.data);
-                  },
-                  separatorBuilder: (BuildContext context, index) {
-                    return Container(
-                      width: double.infinity,
-                      height: 1,
-                      color: Color.fromRGBO(181, 180, 180, 1.0),
-                    );
-                  },
-                  itemCount: 1,
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                    child: Text(
-                  '${snapshot.error}',
-                  style: TextStyle(color: Colors.white),
-                ));
-              }
-              return Center(
-                  child: const CircularProgressIndicator(
-                color: Color.fromRGBO(255, 187, 59, 1.0),
-              ));
-            },
-          )
-          // Expanded(
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Icon(
-          //           Icons.local_movies,
-          //           color: Color.fromRGBO(181, 180, 180, 1.0),
-          //           size: 150,
-          //         ),
-          //         Text(
-          //           'No movies found',
-          //           style: TextStyle(
-          //             fontSize: 14,
-          //             color: Color.fromRGBO(181, 180, 180, 1.0),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
+          searchKey.isNotEmpty
+              ? Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (BuildContext context, index) {
+                      return SearchItem(
+                          loadSearchData().elementAt(index), index);
+                    },
+                    separatorBuilder: (BuildContext context, index) {
+                      return Container(
+                        margin: EdgeInsets.only(
+                            left: 2, right: 2, top: 18, bottom: 18),
+                        width: double.infinity,
+                        height: 1,
+                        color: Color.fromRGBO(181, 180, 180, 1.0),
+                      );
+                    },
+                    itemCount: loadSearchData().length,
+                  ),
+                )
+              : Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.local_movies,
+                        color: Color.fromRGBO(181, 180, 180, 1.0),
+                        size: 150,
+                      ),
+                      Text(
+                        'No movies found',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(181, 180, 180, 1.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
         ],
       ),
     );
   }
 
   List loadSearchData() {
-    ApiRepository.fetchSearchMovies(searchKey).then((value) {
-      result = value.results as List<Results>;
+    ApiRepository.fetchSearch(searchKey).then((value) {
+      result = value.results ?? [];
     }).onError((error, stackTrace) {
       print('error => ${error.toString()}');
     });

@@ -1,39 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
-import 'package:movies_app/moduls/home/popular_movie_widget/popular_item.dart';
-import 'package:movies_app/moduls/home/popular_movie_widget/popular_widget.dart';
-import 'package:movies_app/services/repository/api_repository.dart';
+import 'package:movies_app/moduls/watch_list/watch_item.dart';
+import 'package:movies_app/services/provider/app_provider.dart';
+import 'package:provider/provider.dart';
 
-class WatchListScreen extends StatelessWidget {
+class WatchListScreen extends StatefulWidget {
+  @override
+  State<WatchListScreen> createState() => _WatchListScreenState();
+}
+
+class _WatchListScreenState extends State<WatchListScreen> {
   Movies? movies;
+  late AppProvider provider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: ListView.builder(
-      itemBuilder: (buildContext, index) {
-        return FutureBuilder<Movies>(
-          future: ApiRepository.fetchMoviesData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  'error => ${snapshot.error}',
-                  style: TextStyle(color: Colors.white),
+    provider = Provider.of<AppProvider>(context);
+    return SafeArea(
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(left: 10, right: 10, top: 30),
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Watchlist',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: const CircularProgressIndicator(
-                  color: Color.fromRGBO(255, 187, 59, 1.0),
-                ),
-              );
-            }
-            return PopularWidget(snapshot.requireData);
-          },
-        );
-      },
-      itemCount: resdata.length,
-    ));
+              ),
+            ),
+            SizedBox(height: 20),
+            provider.idList.isNotEmpty
+                ? Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (buildContext, index) {
+                        return WatchItem(provider.watchList.elementAt(index));
+                      },
+                      separatorBuilder: (buildContext, index) => Container(
+                        margin: EdgeInsets.only(
+                          left: 2,
+                          right: 2,
+                          top: 18,
+                          bottom: 18,
+                        ),
+                        width: double.infinity,
+                        height: 1,
+                        color: Colors.grey,
+                      ),
+                      itemCount: provider.watchList.length,
+                    ),
+                  )
+                : Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.local_movies,
+                          color: Color.fromRGBO(181, 180, 180, 1.0),
+                          size: 150,
+                        ),
+                        Text(
+                          'No movies select yet.',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color.fromRGBO(181, 180, 180, 1.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
-import 'package:movies_app/moduls/home/popular_movie_widget/popular_item.dart';
-import 'package:movies_app/moduls/home/topRated_widget/topRated_item.dart';
+import 'package:movies_app/moduls/home/DetailsScreen/more_movies_widget.dart';
+import 'package:movies_app/services/provider/app_provider.dart';
+import 'package:movies_app/services/repository/api_repository.dart';
 import 'package:movies_app/services/style/theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
   static const String routeName = 'DetailsScreen';
 
+  Results? movieResult;
+
+  DetailsScreen(this.movieResult);
+
   @override
   Widget build(BuildContext context) {
-    var movies = ModalRoute.of(context)!.settings.arguments as Movies;
+    var provider = Provider.of<AppProvider>(context);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyThemeData.primaryColor,
-        title: Text(movies.results!.elementAt(5).title ?? ''),
+        title: Text(movieResult!.title ?? ''),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -26,10 +32,24 @@ class DetailsScreen extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: size.height * 0.22,
-                    child: Image.network(
-                      'https://image.tmdb.org/t/p/w500' +
-                          '${movies.results!.elementAt(5).backdropPath}',
-                      fit: BoxFit.cover,
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          'https://image.tmdb.org/t/p/w500' +
+                              '${movieResult?.backdropPath ?? ''}',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                        Positioned(
+                          left: size.width * 0.40,
+                          top: size.height * 0.08,
+                          child: Icon(
+                            Icons.play_circle_filled,
+                            size: 70,
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],
@@ -43,7 +63,7 @@ class DetailsScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      movies.results!.elementAt(5).title ?? '',
+                      movieResult?.title ?? '',
                       overflow: TextOverflow.visible,
                       maxLines: 2,
                       style: TextStyle(
@@ -53,7 +73,7 @@ class DetailsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      movies.results!.elementAt(5).releaseDate ?? '',
+                      movieResult?.releaseDate ?? '',
                       style: TextStyle(
                         fontSize: 13,
                         color: Color.fromRGBO(181, 180, 180, 1.0),
@@ -65,7 +85,7 @@ class DetailsScreen extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 15,
+              height: 10,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +93,36 @@ class DetailsScreen extends StatelessWidget {
                 Container(
                   height: 190,
                   margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: PopularItem(movies),
+                  child: Container(
+                    width: 130,
+                    height: 300,
+                    child: Stack(
+                      children: [
+                        InkWell(
+                          onTap: () {},
+                          child: Image.network(
+                            'https://image.tmdb.org/t/p/w500' +
+                                '${movieResult!.posterPath}',
+                            fit: BoxFit.cover,
+                            width: 130,
+                            height: 200,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            provider.selectMovie(movieResult!);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: provider.idList.contains(movieResult!.id)
+                                ? Image.asset('assets/images/ic_check.png')
+                                : Image.asset('assets/images/ic_bookmark.png'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // PopularItem(movies),
                 ),
                 Flexible(
                   child: Column(
@@ -99,22 +148,22 @@ class DetailsScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          movies.results!.elementAt(5).overview ?? '',
+                          movieResult!.overview ?? '',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       Row(
                         children: [
                           Icon(
-                            Icons.star_border,
+                            Icons.star,
                             color: Colors.yellow,
-                            size: 25,
+                            size: 20,
                           ),
                           SizedBox(
                             width: 5,
                           ),
                           Text(
-                            '${movies.results!.elementAt(5).voteAverage}',
+                            '${movieResult!.voteAverage}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -128,42 +177,28 @@ class DetailsScreen extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
-            Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(40, 42, 40, 1.0),
+            FutureBuilder<Movies>(
+              future: ApiRepository.fetchSimilar(
+                movieResult?.id ?? 0,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return MoreMoviesWidget(snapshot.data);
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    '${snapshot.error}',
+                    style: TextStyle(color: Colors.white),
+                  ));
+                }
+                return Center(
+                  child: const CircularProgressIndicator(
+                    color: Color.fromRGBO(255, 187, 59, 1.0),
                   ),
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, top: 5),
-                        child: Text(
-                          'More Like This',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Expanded(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (BuildContext context, int index) =>
-                              TopRatedItem(movies, index),
-                          itemCount: movies.results!.length,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ],
         ),
