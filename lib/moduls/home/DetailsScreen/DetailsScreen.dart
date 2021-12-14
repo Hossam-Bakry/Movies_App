@@ -7,8 +7,6 @@ import 'package:movies_app/services/style/theme.dart';
 import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
-  static const String routeName = 'DetailsScreen';
-
   Results? movieResult;
 
   DetailsScreen(this.movieResult);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
+import 'package:movies_app/moduls/home/DetailsScreen/DetailsScreen.dart';
 import 'package:movies_app/services/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,14 +20,25 @@ class WatchItem extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  'https://image.tmdb.org/t/p/w500' +
-                      '${movieResult!.posterPath}',
-                  fit: BoxFit.cover,
-                  width: 150,
-                  height: 100,
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          DetailsScreen(movieResult!),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.network(
+                    'https://image.tmdb.org/t/p/w500' +
+                        '${movieResult!.posterPath}',
+                    fit: BoxFit.cover,
+                    width: 150,
+                    height: 100,
+                  ),
                 ),
               ),
               InkWell(

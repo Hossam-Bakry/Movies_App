@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/movies.dart';
+import 'package:movies_app/moduls/home/DetailsScreen/DetailsScreen.dart';
 import 'package:movies_app/services/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +19,13 @@ class PopularItem extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (BuildContext context) => DetailsScreen(resultResponse!),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      DetailsScreen(resultResponse!),
+                ),
+              );
               // Navigator.pushNamed(
               //   context,
               //   DetailsScreen.routeName,

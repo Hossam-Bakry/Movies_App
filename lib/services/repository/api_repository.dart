@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:movies_app/model/geners_model.dart';
 import 'package:movies_app/model/movies.dart';
 
 class ApiRepository {
@@ -70,6 +71,33 @@ class ApiRepository {
       return similarResponse;
     } else {
       throw Exception('Failed to load album');
+    }
+  }
+
+  static Future<GenersModel> fetchGeners() async {
+    final response = await http.get(
+      Uri.parse(
+          'https://api.themoviedb.org/3/genre/movie/list?api_key=76a5d02696258c7bb9f8379068beb9cb&language=en-US'),
+    );
+    var genrsResponse = GenersModel.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return genrsResponse;
+    } else {
+      throw Exception('Faild to load album');
+    }
+  }
+
+  static Future<Movies> fetchMoviesList(String catName) async {
+    Uri url = Uri.https('api.themoviedb.org', '/3/discover/movie', {
+      'api_key': apiKey,
+      'with_genres': catName,
+    });
+    final response = await http.get(url);
+    var listResponse = Movies.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return listResponse;
+    } else {
+      throw Exception('Faild to load album');
     }
   }
 }
